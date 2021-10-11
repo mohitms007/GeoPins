@@ -10,12 +10,10 @@ const PinSchema = new mongoose.Schema({
     author: { type: mongoose.Schema.ObjectId, ref: "User" },
     comments: [{
         text: String,
-        CreatedAt: { type: Date, default: Date.now },
+        createdAt: { type: Date, default: Date.now },
         author: { type: mongoose.Schema.ObjectId, ref: "User" },
     }]
 }, { timestamps: true })
 
 
-module.exports = {
-    mongoose.model("Pin", PinSchema)
-}
+module.exports = mongoose.model('Pin', PinSchema);
