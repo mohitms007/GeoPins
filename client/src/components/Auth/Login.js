@@ -2,7 +2,6 @@ import React, {useContext} from "react";
 import {GoogleLogin} from 'react-google-login'
 import {GraphQLClient} from 'graphql-request'
 import {withStyles} from "@material-ui/core/styles";
-import gql from "graphql-tag";
 import Context from '../../context'
 import Typography from '@material-ui/core/Typography'
 import { ME_QUERY } from '../../graphql/queries'
@@ -31,8 +30,10 @@ const Login = ({classes}) => {
         }
 
     }
+
     const onFailure = (err) => {
         console.error('Error Logging in', err)
+        dispatch({ type: "IS_LOGGED_IN", payload: false})
     }
 
     return (

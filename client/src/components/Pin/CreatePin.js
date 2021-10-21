@@ -56,13 +56,11 @@ const CreatePin = ({ classes }) => {
         longitude
       };
 
-      const { createPin } = await client.request(
+      await client.request(
         CREATE_PIN_MUTATION,
         variables
       );
       handleDeleteDraft()
-      console.log("Pin Created: ", { createPin });
-      dispatch({ type: "CREATE_PIN", payload: createPin})
     } catch (e) {
       setSubmitting(false)
       console.log(" Error Creating Pin" , e);
