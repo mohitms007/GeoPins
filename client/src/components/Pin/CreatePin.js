@@ -9,7 +9,9 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 import Context from "../../context";
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 import { CREATE_PIN_MUTATION } from "../../graphql/mutations";
+
 import { useClient } from "../../client";
 
 const CreatePin = ({ classes }) => {
@@ -19,6 +21,7 @@ const CreatePin = ({ classes }) => {
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const client = useClient()
+  const mobileSize = useMediaQuery('max-width: 650px')
 
 
 
@@ -109,7 +112,7 @@ const CreatePin = ({ classes }) => {
           name="content"
           label="content"
           multiline
-          rows="6"
+          rows={mobileSize ? "3" : "6"}
           margin="normal"
           fullWidth
           variant="outlined"

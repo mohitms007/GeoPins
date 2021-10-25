@@ -8,6 +8,7 @@ import PinIcon from "./PinIcon";
 import context from "../context";
 import Blog from "./Blog";
 import { DELETE_PIN_MUTATION } from "../graphql/mutations";
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery'
 import { useClient } from "../client";
 import { GET_PINS_QUERY } from "../graphql/queries";
 import differenceInMinutes from "date-fns/difference_in_minutes";
@@ -30,6 +31,7 @@ const Map = ({ classes }) => {
   const [viewport, setViewport] = useState(INTIAL_VIEWPORT);
   const [userPosition, setUserPosition] = useState(null);
   const client = useClient();
+  const mobileSize = useMediaQuery('(max-width: 650px)')
 
   useEffect(() => {
     getUserPosition();
@@ -89,12 +91,13 @@ const Map = ({ classes }) => {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={mobileSize ? classes.rootMobile : classes.root}>
       <ReactMapGL
         width="100vw"
         height="calc(100vh - 64px)"
         mapStyle="mapbox://styles/mapbox/streets-v9"
         onClick={handleMapClick}
+        scrollZoom={!mobileSize}
         mapboxApiAccessToken={process.env.REACT_APP_MAP_API}
         onViewportChange={(viewport) => setViewport(viewport)}
         {...viewport}
@@ -174,26 +177,34 @@ const Map = ({ classes }) => {
       {/* Subscriptions for adding/updating and deleting Pins */}
       <Subscription
         subscription={PIN_ADDED_SUBSCRIPTION}
-        onSubscriptionData={({ subscriptionData }) => {
-          const { pinAdded } = subscriptionData.data;
-          console.log(pinAdded);
-          dispatch({ type: "CREATE_PIN", payload: pinAdded });
+        onSubscriptionData={({
+          subscriptionData: {
+            data: { pinAdded },
+          },
+        }) => {
+          dispatch({ type: 'CREATE_PIN', payload: pinAdded });
         }}
       />
       <Subscription
         subscription={PIN_UPDATED_SUBSCRIPTION}
-        onSubscriptionData={({ subscriptionData }) => {
-          const { pinUpdated } = subscriptionData.data;
-          console.log(pinUpdated);
-          dispatch({ type: "UPDATED_PIN_COMMENT", payload: pinUpdated });
+        onSubscriptionData={({
+          subscriptionData: {
+            data: { pinUpdated },
+          },
+        }) => {
+          console.log(pinUpdated)
+          dispatch({ type: 'UPDATED_PIN_COMMENT', payload: pinUpdated });
         }}
       />
       <Subscription
         subscription={PIN_DELETED_SUBSCRIPTION}
-        onSubscriptionData={({ subscriptionData }) => {
-          const { pinDeleted } = subscriptionData.data;
-          console.log(pinDeleted);
-          dispatch({ type: "DELETE_PIN", payload: pinDeleted });
+        onSubscriptionData={({
+          subscriptionData: {
+            data: { pinDeleted },
+          },
+        }) => {
+          // console.log(pinDeleted)
+          // dispatch({ type: 'DELETE_PIN', payload: pinDeleted });
         }}
       />
 
